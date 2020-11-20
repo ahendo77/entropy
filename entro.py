@@ -109,41 +109,36 @@ def find_entropy(filename):
 	from trufflehog but modified.
 	"""
 	strings_found = []  # store detected secrets
-	line_counter = 0 # this will let us record what line a secret was found on
 	printable = [] # this will store the printable result
 	
-	with open(filename) as f:	
-		lines = f.readlines()
+	with open(filename, encoding='utf8') as f:	
 		
-	for line in lines: # step through each line
-	
-		for word in line.split(): # look at each word.
-			base64_strings = get_strings_of_set(word, BASE64_CHARS) # get b64 blobs
-			hex_strings = get_strings_of_set(word, HEX_CHARS) # get hex blobs
-			for string in base64_strings: # step through each b64 string
-				b64_entropy = shannon_entropy(string, BASE64_CHARS) # calculate entropy
-				if b64_entropy > b64_minimum: # if entropy is significant
-					strings_found.append(string) # record string
-					if verbose:
-						p = "\n-----------\nFile: " + filename + "\nLine: " + str(line_counter) + "\nType: Base64\nShannon Entropy: " + str(b64_entropy) \
-							+ "\nSecret: " + string + "\nFull Line:\n\t" + line.strip()
-					else:
-						p = "\n"+ filename + " : " + str(line_counter) + " : " + line
-					printable.append(p)
-			for string in hex_strings: # step through each hex string
-				hex_entropy = shannon_entropy(string, HEX_CHARS) # calculate entropy
-				if hex_entropy > hex_minimum: # if entropy is significant
-					strings_found.append(string)
-					if verbose:
-						p = "\n-----------\nFile: " + filename + "\nLine: " + str(line_counter) + "\nType: HEX\nShannon Entropy: " + str(hex_entropy) \
-							+ "\nSecret: " + string + "\nFull Line:\n\t" + line.strip()
-					else:
-						p = "\n"+ filename + " : " + str(line_counter) + " : " + line
-					printable.append(p)
-
-			
-		line_counter += 1
-	return printable
+		for line_counter, line in enumerate(f, 1): # step through each line
+		
+			for word in line.split(): # look at each word.
+				base64_strings = get_strings_of_set(word, BASE64_CHARS) # get b64 blobs
+				hex_strings = get_strings_of_set(word, HEX_CHARS) # get hex blobs
+				for string in base64_strings: # step through each b64 string
+					b64_entropy = shannon_entropy(string, BASE64_CHARS) # calculate entropy
+					if b64_entropy > b64_minimum: # if entropy is significant
+						strings_found.append(string) # record string
+						if verbose:
+							p = "\n-----------\nFile: " + filename + "\nLine: " + str(line_counter) + "\nType: Base64\nShannon Entropy: " + str(b64_entropy) \
+								+ "\nSecret: " + string + "\nFull Line:\n\t" + line.strip()
+						else:
+							p = "\n"+ filename + " : " + str(line_counter) + " : " + line
+						printable.append(p)
+				for string in hex_strings: # step through each hex string
+					hex_entropy = shannon_entropy(string, HEX_CHARS) # calculate entropy
+					if hex_entropy > hex_minimum: # if entropy is significant
+						strings_found.append(string)
+						if verbose:
+							p = "\n-----------\nFile: " + filename + "\nLine: " + str(line_counter) + "\nType: HEX\nShannon Entropy: " + str(hex_entropy) \
+								+ "\nSecret: " + string + "\nFull Line:\n\t" + line.strip()
+						else:
+							p = "\n"+ filename + " : " + str(line_counter) + " : " + line
+						printable.append(p)
+		return printable
 	
 if __name__ == "__main__":
     main()
