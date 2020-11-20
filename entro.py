@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 
 import math
 import argparse
@@ -51,7 +52,7 @@ def main():
 			for file in files:
 				result = find_entropy(root+"/"+file)
 				for i in result:
-					print i
+					print(i)
 					
 	# all files in current dir
 	elif args.directory and not args.recurse: 
@@ -59,13 +60,13 @@ def main():
 		for file in files:
 			result = find_entropy(file)
 			for i in result:
-				print i
+				print(i)
 		
 	# only supplied file
 	else: 
 		result = find_entropy(args.filename)
 		for i in result:
-			print i
+			print(i)
 
 def get_strings_of_set(word, char_set):
 	""" 
