@@ -51,6 +51,9 @@ def main():
 	parser.add_argument('--hexentropy', type=float, metavar="", default=3, help='Minimum shannon entropy to report a hex string.')
 	args = parser.parse_args()
 	
+	# Clear whats currently on terminal
+	os.system("cls")
+
 	if args.filename == None and args.directoryspecific == None:    # if no filename is supplied we search all files in the current directory. 
 		args.directory = True
 	else:
@@ -75,11 +78,16 @@ def main():
 			for file in files:
 				try:
 					result = find_entropy(root+"/"+file)
+					for i in result:
+						if len(i) > 10000:
+							log_file.write(i)
+							print(f"\n-----------\nSecret too long to print in file:{file}")
+						else:
+							print(i)
+							log_file.write(i)
 				except Exception as e:
 					print(f"\n-----------\nError dealing with {file}: {e}\n")
-				for i in result:
-					print(i)
-					log_file.write(i)
+				
 					
 	# all files in current dir
 	elif args.directory and not args.recurse: 
