@@ -36,7 +36,7 @@ def main():
 	time_now = datetime.now()
 	time_formatted = time_now.strftime("%H%M%S")
 	log_file_name = f"log_{time_formatted}.txt"
-	log_file = open(fr"C:\Users\ahend\Desktop\entrologs\{log_file_name}", "a", encoding="utf8")
+	log_file = open(fr"C:\Users\ahenderson\Desktop\entrologs\{log_file_name}", "a", encoding="utf8")
 	
 	parser = argparse.ArgumentParser(description='Search files for strings with high shannon entropy.')
 	group = parser.add_mutually_exclusive_group()
